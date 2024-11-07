@@ -5,8 +5,7 @@ on:
     branches:
       - master
 
-env:
-  ROLLBACK_ATTEMPTED: false  
+
 
 jobs:
   set-environment:
@@ -14,9 +13,7 @@ jobs:
     steps:
       - name: Set environment
         run: echo "Setting environment"
-      - name: Print ROLLBACK_ATTEMPTED Before
-        run: echo "ROLLBACK_ATTEMPTED Before:${{ env.ROLLBACK_ATTEMPTED }}"
-
+    
   prerequisite:
     runs-on: ubuntu-latest
     needs: set-environment
