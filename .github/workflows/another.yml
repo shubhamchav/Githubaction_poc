@@ -38,7 +38,7 @@ jobs:
       - name: Copy from S3
         run: |
           echo "Copying from S3"
-          false  
+          #false  
 
   check-condition:
     needs: [set-environment, prerequisite, get-computer-name, copy-from-s3]
@@ -49,6 +49,9 @@ jobs:
       ENVIRONMENT: 'production'
       ROLLBACK_ATTEMPTED: ${{ (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') && 'true' || 'false' }}
 
+
+    true
+    
   print-env:
     runs-on: ubuntu-latest
     needs: [set-environment, prerequisite, get-computer-name, copy-from-s3, check-condition]
