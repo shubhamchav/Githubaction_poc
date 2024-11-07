@@ -30,7 +30,6 @@ jobs:
 
   copy-from-s3:
     runs-on: windows-latest
-    needs: get-computer-name
     steps:
       - name: Copy from S3
         run: |
