@@ -46,7 +46,7 @@ jobs:
   slack-notification-success:
     runs-on: ubuntu-latest
     needs: [set-environment, prerequisite, get-computer-name, copy-from-s3, rollback_to_previous]
-    if: ${{ always() && (needs.set-environment.result == 'success' || needs.prerequisite.result == 'success' || needs.get-computer-name.result == 'success' || needs.copy-from-s3.result == 'success' || needs.rollback_to_previous.result != 'failure' || needs.rollback_to_previous.result != 'cancelled') }}
+    if: ${{(needs.set-environment.result == 'success' || needs.prerequisite.result == 'success' || needs.get-computer-name.result == 'success' || needs.copy-from-s3.result == 'success' || needs.rollback_to_previous.result != 'failure' || needs.rollback_to_previous.result != 'cancelled') }}
     steps:
       - name: Success Notification
         run: echo "Workflow completed successfully"
