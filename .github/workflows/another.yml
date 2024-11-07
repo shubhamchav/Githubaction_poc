@@ -33,7 +33,7 @@ jobs:
       - name: Copy from S3
         run: |
           echo "Copying from S3"
-          false  
+         #false  
 
   rollback_to_previous:
     needs: [set-environment, prerequisite, get-computer-name, copy-from-s3]
