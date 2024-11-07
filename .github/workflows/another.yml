@@ -42,7 +42,7 @@ jobs:
 
   check-condition:
     needs: [set-environment, prerequisite, get-computer-name, copy-from-s3]
-    if: ${{ always() && (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') }}
+    if: ${{(needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') }}
     uses: shubhamchav/Githubaction_POC_rollback/.github/workflows/base.yml@master
     with:
       VERSION: ${{ github.run_number }}
