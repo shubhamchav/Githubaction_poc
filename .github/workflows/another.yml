@@ -24,7 +24,8 @@ jobs:
     needs: prerequisite
     steps:
       - name: Get computer name
-        run: echo "Computer name"
+        run: |
+             echo "Computer name"
              false
 
   copy-from-s3:
