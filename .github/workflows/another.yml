@@ -25,6 +25,7 @@ jobs:
     steps:
       - name: Get computer name
         run: echo "Computer name"
+             false
 
   copy-from-s3:
     runs-on: windows-latest
