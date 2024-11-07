@@ -1,0 +1,73 @@
+name: Another Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  ROLLBACK_ATTEMPTED: false  
+
+jobs:
+  set-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set environment
+        run: echo "Setting environment"
+      - name: Print ROLLBACK_ATTEMPTED Before
+        run: echo "ROLLBACK_ATTEMPTED Before:${{ env.ROLLBACK_ATTEMPTED }}"
+
+  prerequisite:
+    runs-on: ubuntu-latest
+    needs: set-environment
+    steps:
+      - name: Prerequisite step
+        run: echo "Running prerequisite"
+
+  get-computer-name:
+    runs-on: ubuntu-latest
+    needs: prerequisite
+    steps:
+      - name: Get computer name
+        run: echo "Computer name"
+
+  copy-from-s3:
+    runs-on: windows-latest
+    needs: get-computer-name
+    steps:
+      - name: Copy from S3
+        run: |
+          echo "Copying from S3"
+          false  
+
+  check-condition:
+    needs: [set-environment, prerequisite, get-computer-name, copy-from-s3]
+    if: ${{ always() && (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') }}
+    uses: shubhamchav/Githubaction_POC_rollback/.github/workflows/base.yml@master
+    with:
+      VERSION: ${{ github.run_number }}
+      ENVIRONMENT: 'production'
+      ROLLBACK_ATTEMPTED: ${{ (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') && 'true' || 'false' }}
+
+  print-env:
+    runs-on: ubuntu-latest
+    needs: [set-environment, prerequisite, get-computer-name, copy-from-s3, check-condition]
+    if: ${{ always() }}
+    steps:
+      - name: Download Rollback Status File
+        uses: actions/download-artifact@v2
+        with:
+          name: rollback_status
+
+      - name: Print Rollback Status from File
+        run: |
+          echo "Rollback Attempted Status:"
+          cat rollback_status.txt
+
+  deployment:
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    needs: [print-env, check-condition]
+    uses: shubhamchav/Githubaction_POC_rollback/.github/workflows/base.yml@master
+    with:
+      VERSION: ${{ github.run_number }} 
+      ENVIRONMENT: 'production'
