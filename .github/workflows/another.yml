@@ -47,8 +47,8 @@ jobs:
     with:
       VERSION: ${{ github.run_number }}
       ENVIRONMENT: 'production'
-      ROLLBACK_ATTEMPTED: ${{ (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') && 'true' || 'false' }}
-                          false
+      #ROLLBACK_ATTEMPTED: ${{ (needs.set-environment.result == 'failure' || needs.prerequisite.result == 'failure' || needs.get-computer-name.result == 'failure' || needs.copy-from-s3.result == 'failure') && 'true' || 'false' }}
+      continue-on-errors: true
 
     
     
