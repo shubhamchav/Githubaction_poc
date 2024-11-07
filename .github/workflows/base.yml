@@ -1,0 +1,41 @@
+# base.yml
+name: Base Workflow
+
+on:
+  workflow_call:
+    inputs:
+      VERSION:
+        required: true
+        type: string
+      ENVIRONMENT:
+        required: true
+        type: string
+      ROLLBACK_ATTEMPTED:
+        required: false
+        type: string
+        default: 'false'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Print Current Directory
+        run: pwd
+
+      - name: List Files
+        run: ls -la
+
+      - name: Build Step
+        run: echo "Building version ${{ inputs.VERSION }} for environment ${{ inputs.ENVIRONMENT }}"
+
+      - name: Write Rollback Attempted Status to File
+        run: echo "${{ inputs.ROLLBACK_ATTEMPTED }}" > rollback_status.txt
+
+      - name: Upload Rollback Status File
+        uses: actions/upload-artifact@v2
+        with:
+          name: rollback_status
+          path: rollback_status.txt
